@@ -52,16 +52,6 @@ namespace Gamekit3D
 
         const int k_MaxSortingLayer = 32767;
 
-        void Awake()
-        {
-            if (Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            DontDestroyOnLoad(gameObject);
-        }
 
         protected IEnumerator Fade(float finalAlpha, CanvasGroup canvasGroup)
         {
