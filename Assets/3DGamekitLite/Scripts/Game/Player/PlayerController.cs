@@ -646,6 +646,7 @@ namespace Gamekit3D
         // Called by OnReceiveMessage.
         void Damaged(Damageable.DamageMessage damageMessage)
         {
+            Debug.Log("Damaged: " + damageMessage.amount);
             // Set the Hurt parameter of the animator.
             m_Animator.SetTrigger(m_HashHurt);
 
