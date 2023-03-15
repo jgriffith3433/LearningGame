@@ -135,7 +135,7 @@ public class GameManager : Singleton<GameManager>
         if (InputManager.Instance)
             InputManager.Instance.ReleaseControl();
 
-        yield return StartCoroutine(ScreenFader.FadeSceneOut(ScreenFader.FadeType.Loading));
+        yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneOut(ScreenFadeManager.FadeType.Loading));
         PersistentDataManager.ClearPersisters();
         yield return SceneManager.LoadSceneAsync(newSceneName);
         if (InputManager.Instance)
@@ -144,7 +144,7 @@ public class GameManager : Singleton<GameManager>
         PersistentDataManager.LoadAllData();
         SceneTransitionDestination entrance = LevelManager.Instance.GetDestination(destinationTag);
         LevelManager.Instance.MoveToTransitionDestination(entrance);
-        yield return StartCoroutine(ScreenFader.FadeSceneIn());
+        yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneIn());
         if (InputManager.Instance)
             InputManager.Instance.GainControl();
 
@@ -176,7 +176,7 @@ public class GameManager : Singleton<GameManager>
 
     protected void SwitchPauseState()
     {
-        if (Paused && Time.timeScale > 0 || !Paused && ScreenFader.IsFading)
+        if (Paused && Time.timeScale > 0 || !Paused && ScreenFadeManager.Instance.IsFading)
             return;
 
         if (!m_AlwaysDisplayMouse)

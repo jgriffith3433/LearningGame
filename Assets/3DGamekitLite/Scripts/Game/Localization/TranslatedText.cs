@@ -18,12 +18,12 @@ namespace Gamekit3D
         void Start ()
         {
             if(setTextOnStart)
-                text.text = Translator.Instance[phraseKey];
+                text.text = LocalizationManager.Instance[phraseKey];
         }
 
         public void SetText ()
         {
-            text.text = Translator.Instance[phraseKey];
+            text.text = LocalizationManager.Instance[phraseKey];
         }
     }
 }

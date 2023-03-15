@@ -17,7 +17,7 @@ public class DialogueController : StateMachine
 
     public void ShowDialogueTranslatedText(string phraseKey)
     {
-        m_ShowDialogueState.SetDialogueText(Translator.Instance[phraseKey]);
+        m_ShowDialogueState.SetDialogueText(LocalizationManager.Instance[phraseKey]);
         ChangeState("ShowDialogue");
     }
 

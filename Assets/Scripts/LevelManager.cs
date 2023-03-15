@@ -7,8 +7,6 @@ using Gamekit3D;
 
 public class LevelManager : Singleton<LevelManager>
 {
-    [SerializeField] SceneTransitionDestination m_InitialSceneTransitionDestination = null;
-
     private SceneTransitionDestination.DestinationTag m_ZoneRestartDestinationTag = SceneTransitionDestination.DestinationTag.A;
     private PlayableDirector[] m_Directors = null;
 

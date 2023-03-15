@@ -52,7 +52,7 @@ namespace Gamekit3D
             {
                 m_TransitioningGameObjectPresent = true;
 
-                if (ScreenFader.IsFading || GameManager.Instance.Transitioning)
+                if (ScreenFadeManager.Instance.IsFading || GameManager.Instance.Transitioning)
                     return;
 
                 if (transitionWhen == TransitionWhen.OnTriggerEnter)

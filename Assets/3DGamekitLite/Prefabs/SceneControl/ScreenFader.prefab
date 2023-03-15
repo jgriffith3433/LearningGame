@@ -80,7 +80,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4857368061475226}
-  - component: {fileID: 114284569073516130}
+  - component: {fileID: 775676716948778632}
+  - component: {fileID: 8046468061958321324}
   m_Layer: 0
   m_Name: ScreenFader
   m_TagString: Untagged
@@ -105,7 +106,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114284569073516130
+--- !u!114 &775676716948778632
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,13 +115,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1180882689011410}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 070aa26860bb7b54e972039f2e9d7f38, type: 3}
+  m_Script: {fileID: 11500000, guid: 55938fb1577dd4ad3af7e994048c86f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8046468061958321324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180882689011410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 967f28614f85171488d417d62e04f0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dontDestroyOnLoad: 1
   faderCanvasGroup: {fileID: 225855529714426096}
   loadingCanvasGroup: {fileID: 225342700887289456}
   gameOverCanvasGroup: {fileID: 225911621604966022}
-  fadeDuration: 0.5
+  fadeDuration: 1
 --- !u!1 &1401849038399698
 GameObject:
   m_ObjectHideFlags: 0

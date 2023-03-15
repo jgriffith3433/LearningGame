@@ -578,8 +578,8 @@ namespace Gamekit3D
             }
             
             // Wait for the screen to fade out.
-            yield return StartCoroutine(ScreenFader.FadeSceneOut());
-            while (ScreenFader.IsFading)
+            yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneOut());
+            while (ScreenFadeManager.Instance.IsFading)
             {
                 yield return null;
             }
@@ -607,7 +607,7 @@ namespace Gamekit3D
             
             // Wait for the screen to fade in.
             // Currently it is not important to yield here but should some changes occur that require waiting until a respawn has finished this will be required.
-            yield return StartCoroutine(ScreenFader.FadeSceneIn());
+            yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneIn());
             
             m_Damageable.ResetDamage();
         }

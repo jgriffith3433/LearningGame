@@ -6,20 +6,22 @@ using UnityEngine;
 
 namespace Gamekit3D
 {
-    [CustomEditor(typeof(Translator))]
-    public class TranslatorEditor : Editor
+    [CustomEditor(typeof(LocalizationManager))]
+    public class LocalizationManagerEditor : Editor
     {
         SerializedProperty m_PhrasesProp;
+        SerializedProperty m_DontDestroyOnLoadProp;
         SerializedProperty m_LanguageIndexProp;
-        Translator m_Translator;
+        LocalizationManager m_Translator;
         string[] m_AvailableLanguages;
 
         void OnEnable ()
         {
             m_PhrasesProp = serializedObject.FindProperty ("phrases");
             m_LanguageIndexProp = serializedObject.FindProperty ("m_LanguageIndex");
+            m_DontDestroyOnLoadProp = serializedObject.FindProperty ("_dontDestroyOnLoad");
 
-            m_Translator = (Translator)target;
+            m_Translator = (LocalizationManager)target;
 
             if(AllOriginalPhrasesNonNull ())
                 SetupLanguages ();
@@ -28,6 +30,8 @@ namespace Gamekit3D
         public override void OnInspectorGUI ()
         {
             serializedObject.Update ();
+
+            m_DontDestroyOnLoadProp.boolValue = EditorGUILayout.Toggle("Dont Destroy On Load", m_DontDestroyOnLoadProp.boolValue);
 
             if (m_PhrasesProp.arraySize > 0 && AllOriginalPhrasesNonNull ())
             {
