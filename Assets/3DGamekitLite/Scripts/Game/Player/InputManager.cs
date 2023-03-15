@@ -2,17 +2,10 @@
 using System;
 using System.Collections;
 using Gamekit3D;
+using Pixelplacement;
 
-
-public class PlayerInput : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
-    public static PlayerInput Instance
-    {
-        get { return s_Instance; }
-    }
-
-    protected static PlayerInput s_Instance;
-
     [HideInInspector]
     public bool playerControllerInputBlocked;
 
@@ -58,21 +51,9 @@ public class PlayerInput : MonoBehaviour
         get { return m_Pause; }
     }
 
-    WaitForSeconds m_AttackInputWait;
     Coroutine m_AttackWaitCoroutine;
 
     const float k_AttackInputDuration = 0.03f;
-
-    void Awake()
-    {
-        m_AttackInputWait = new WaitForSeconds(k_AttackInputDuration);
-
-        if (s_Instance == null)
-            s_Instance = this;
-        else if (s_Instance != this)
-            throw new UnityException("There cannot be more than one PlayerInput script.  The instances are " + s_Instance.name + " and " + name + ".");
-    }
-
 
     void Update()
     {
@@ -94,9 +75,7 @@ public class PlayerInput : MonoBehaviour
     IEnumerator AttackWait()
     {
         m_Attack = true;
-
-        yield return m_AttackInputWait;
-
+        yield return new WaitForSeconds(k_AttackInputDuration);
         m_Attack = false;
     }
 

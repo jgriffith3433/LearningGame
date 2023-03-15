@@ -44,7 +44,6 @@ namespace Gamekit3D
         protected float m_DesiredForwardSpeed;         // How fast Ellen aims be going along the ground based on input.
         protected float m_ForwardSpeed;                // How fast Ellen is currently going along the ground.
         protected float m_VerticalSpeed;               // How fast Ellen is currently moving up or down.
-        protected PlayerInput m_Input;                 // Reference used to determine how Ellen should move.
         protected CharacterController m_CharCtrl;      // Reference used to actually move Ellen.
         protected Animator m_Animator;                 // Reference used to make decisions based on Ellen's current animation and to set parameters.
         protected Material m_CurrentWalkingSurface;    // Reference used to make decisions about audio.
@@ -102,7 +101,7 @@ namespace Gamekit3D
 
         protected bool IsMoveInput
         {
-            get { return !Mathf.Approximately(m_Input.MoveInput.sqrMagnitude, 0f); }
+            get { return !Mathf.Approximately(InputManager.Instance.MoveInput.sqrMagnitude, 0f); }
         }
 
         public void SetCanAttack(bool canAttack)
@@ -142,7 +141,6 @@ namespace Gamekit3D
         // Called automatically by Unity when the script first exists in the scene.
         void Awake()
         {
-            m_Input = GetComponent<PlayerInput>();
             m_Animator = GetComponent<Animator>();
             m_CharCtrl = GetComponent<CharacterController>();
 
@@ -189,7 +187,7 @@ namespace Gamekit3D
             m_Animator.SetFloat(m_HashStateTime, Mathf.Repeat(m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
             m_Animator.ResetTrigger(m_HashMeleeAttack);
 
-            if (m_Input.Attack && canAttack)
+            if (InputManager.Instance.Attack && canAttack)
                 m_Animator.SetTrigger(m_HashMeleeAttack);
 
             CalculateForwardMovement();
@@ -224,7 +222,7 @@ namespace Gamekit3D
         {
             bool inputBlocked = m_CurrentStateInfo.tagHash == m_HashBlockInput && !m_IsAnimatorTransitioning;
             inputBlocked |= m_NextStateInfo.tagHash == m_HashBlockInput;
-            m_Input.playerControllerInputBlocked = inputBlocked;
+            InputManager.Instance.playerControllerInputBlocked = inputBlocked;
         }
 
         // Called after the animator state has been cached to determine whether or not the staff should be active or not.
@@ -253,7 +251,7 @@ namespace Gamekit3D
         void CalculateForwardMovement()
         {
             // Cache the move input and cap it's magnitude at 1.
-            Vector2 moveInput = m_Input.MoveInput;
+            Vector2 moveInput = InputManager.Instance.MoveInput;
             if (moveInput.sqrMagnitude > 1f)
                 moveInput.Normalize();
 
@@ -274,7 +272,7 @@ namespace Gamekit3D
         void CalculateVerticalMovement()
         {
             // If jump is not currently held and Ellen is on the ground then she is ready to jump.
-            if (!m_Input.JumpInput && m_IsGrounded)
+            if (!InputManager.Instance.JumpInput && m_IsGrounded)
                 m_ReadyToJump = true;
 
             if (m_IsGrounded)
@@ -283,7 +281,7 @@ namespace Gamekit3D
                 m_VerticalSpeed = -gravity * k_StickingGravityProportion;
 
                 // If jump is held, Ellen is ready to jump and not currently in the middle of a melee combo...
-                if (m_Input.JumpInput && m_ReadyToJump && !m_InCombo)
+                if (InputManager.Instance.JumpInput && m_ReadyToJump && !m_InCombo)
                 {
                     // ... then override the previously set vertical speed and make sure she cannot jump again.
                     m_VerticalSpeed = jumpSpeed;
@@ -294,7 +292,7 @@ namespace Gamekit3D
             else
             {
                 // If Ellen is airborne, the jump button is not held and Ellen is currently moving upwards...
-                if (!m_Input.JumpInput && m_VerticalSpeed > 0.0f)
+                if (!InputManager.Instance.JumpInput && m_VerticalSpeed > 0.0f)
                 {
                     // ... decrease Ellen's vertical speed.
                     // This is what causes holding jump to jump higher that tapping jump.
@@ -316,7 +314,7 @@ namespace Gamekit3D
         void SetTargetRotation()
         {
             // Create three variables, move input local to the player, flattened forward direction of the camera and a local target rotation.
-            Vector2 moveInput = m_Input.MoveInput;
+            Vector2 moveInput = InputManager.Instance.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
             
             Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
@@ -408,7 +406,7 @@ namespace Gamekit3D
         {
             m_Animator.SetFloat(m_HashAngleDeltaRad, m_AngleDiff * Mathf.Deg2Rad);
 
-            Vector3 localInput = new Vector3(m_Input.MoveInput.x, 0f, m_Input.MoveInput.y);
+            Vector3 localInput = new Vector3(InputManager.Instance.MoveInput.x, 0f, InputManager.Instance.MoveInput.y);
             float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, m_ForwardSpeed / m_DesiredForwardSpeed);
             float actualTurnSpeed = m_IsGrounded ? groundedTurnSpeed : Vector3.Angle(transform.forward, localInput) * k_InverseOneEighty * k_AirborneTurnSpeedProportion * groundedTurnSpeed;
             m_TargetRotation = Quaternion.RotateTowards(transform.rotation, m_TargetRotation, actualTurnSpeed * Time.deltaTime);
@@ -469,7 +467,7 @@ namespace Gamekit3D
         // Called each physics step to count up to the point where Ellen considers a random idle.
         void TimeoutToIdle()
         {
-            bool inputDetected = IsMoveInput || m_Input.Attack || m_Input.JumpInput;
+            bool inputDetected = IsMoveInput || InputManager.Instance.Attack || InputManager.Instance.JumpInput;
             if (m_IsGrounded && !inputDetected)
             {
                 m_IdleTimer += Time.deltaTime;

@@ -53,7 +53,7 @@ namespace Gamekit3D
 
         private void FixedUpdate()
         {
-            animator.speed = PlayerInput.Instance != null && PlayerInput.Instance.HaveControl() ? 1.0f : 0.0f;
+            animator.speed = InputManager.Instance != null && InputManager.Instance.HaveControl() ? 1.0f : 0.0f;
 
             CheckGrounded();
 

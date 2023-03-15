@@ -6,6 +6,7 @@ using Pixelplacement;
 using Gamekit3D;
 using UnityEngine.Playables;
 using UnityEditor;
+using System;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -15,9 +16,18 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private float m_SecondsToWaitStartGame = 2f;
 
     private bool m_AlwaysDisplayMouse = true;
+    private bool m_Transitioning = false;
 
     public bool Paused = false;
     public int CurrentLevelNumber = 1;
+
+    public Scene CurrentScene
+    {
+        get
+        {
+            return LevelManager.Instance.gameObject.scene;
+        }
+    }
 
     public UIController UIController
     {
@@ -32,6 +42,14 @@ public class GameManager : Singleton<GameManager>
         get
         {
             return m_DialogueController;
+        }
+    }
+
+    public bool Transitioning
+    {
+        get
+        {
+            return m_Transitioning;
         }
     }
 
@@ -88,11 +106,57 @@ public class GameManager : Singleton<GameManager>
         m_UIController.ChangeState("Title");
     }
 
+    public void RestartScene(bool resetHealth = true)
+    {
+        StartCoroutine(Transition(CurrentScene.name, LevelManager.Instance.ZoneRestartDestinationTag));
+    }
+
+    public void RestartSceneWithDelay(float delay, bool resetHealth = true)
+    {
+        StartCoroutine(CallWithDelay(delay, RestartScene, resetHealth));
+    }
+
+    static IEnumerator CallWithDelay<T>(float delay, Action<T> call, T parameter)
+    {
+        yield return new WaitForSeconds(delay);
+        call(parameter);
+    }
+
+    public void TransitionToScene(TransitionPoint transitionPoint)
+    {
+        StartCoroutine(Transition(transitionPoint.newSceneName, transitionPoint.transitionDestinationTag, transitionPoint.transitionType));
+    }
+
+    private IEnumerator Transition(string newSceneName, SceneTransitionDestination.DestinationTag destinationTag, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
+    {
+        m_Transitioning = true;
+        PersistentDataManager.SaveAllData();
+
+        if (InputManager.Instance)
+            InputManager.Instance.ReleaseControl();
+
+        yield return StartCoroutine(ScreenFader.FadeSceneOut(ScreenFader.FadeType.Loading));
+        PersistentDataManager.ClearPersisters();
+        yield return SceneManager.LoadSceneAsync(newSceneName);
+        if (InputManager.Instance)
+            InputManager.Instance.ReleaseControl();
+
+        PersistentDataManager.LoadAllData();
+        SceneTransitionDestination entrance = LevelManager.Instance.GetDestination(destinationTag);
+        LevelManager.Instance.MoveToTransitionDestination(entrance);
+        yield return StartCoroutine(ScreenFader.FadeSceneIn());
+        if (InputManager.Instance)
+            InputManager.Instance.GainControl();
+
+        m_Transitioning = false;
+    }
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (SceneManager.GetActiveScene().name == "Title")
+            if (CurrentScene.name == "Title")
             {
                 m_UIController.ChangeState("Title");
             }
@@ -135,12 +199,12 @@ public class GameManager : Singleton<GameManager>
 
         if (!Paused)
             CameraShake.Stop();
-        if (PlayerInput.Instance != null)
+        if (InputManager.Instance != null)
         {
             if (Paused)
-                PlayerInput.Instance.GainControl();
+                InputManager.Instance.GainControl();
             else
-                PlayerInput.Instance.ReleaseControl();
+                InputManager.Instance.ReleaseControl();
         }
 
         if (Paused)

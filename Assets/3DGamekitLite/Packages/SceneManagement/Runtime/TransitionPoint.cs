@@ -9,7 +9,7 @@ namespace Gamekit3D
     {
         public enum TransitionType
         {
-            DifferentZone, DifferentNonGameplayScene, SameScene,
+            DifferentScene, DifferentNonGameplayScene, SameScene,
         }
 
 
@@ -52,7 +52,7 @@ namespace Gamekit3D
             {
                 m_TransitioningGameObjectPresent = true;
 
-                if (ScreenFader.IsFading || SceneController.Transitioning)
+                if (ScreenFader.IsFading || GameManager.Instance.Transitioning)
                     return;
 
                 if (transitionWhen == TransitionWhen.OnTriggerEnter)
@@ -82,7 +82,7 @@ namespace Gamekit3D
             }
             else
             {
-                SceneController.TransitionToScene(this);
+                GameManager.Instance.TransitionToScene(this);
             }
         }
 
