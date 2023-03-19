@@ -16367,6 +16367,7 @@ GameObject:
   - component: {fileID: 95065152071237234}
   - component: {fileID: 143281348168218644}
   - component: {fileID: 114011089888769184}
+  - component: {fileID: 9191349703472344481}
   - component: {fileID: 114579421511091938}
   - component: {fileID: 114166992771378430}
   m_Layer: 9
@@ -16543,6 +16544,18 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   onDamageMessageReceivers: []
+--- !u!114 &9191349703472344481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991219941496362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55938fb1577dd4ad3af7e994048c86f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114579421511091938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16555,6 +16568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faa8b67e83b73fb4ba6b6a9b2482a664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _dontDestroyOnLoad: 0
   maxForwardSpeed: 8
   gravity: 20
   jumpSpeed: 10

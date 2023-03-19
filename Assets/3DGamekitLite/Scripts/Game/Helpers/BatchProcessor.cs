@@ -1,14 +1,14 @@
-﻿using System.Collections;
+﻿using Pixelplacement;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gamekit3D
 {
-    public class BatchProcessor : MonoBehaviour
+    public class BatchProcessor : Singleton<BatchProcessor>
     {
         public delegate void BatchProcessing();
 
-        static protected BatchProcessor s_Instance;
         static protected List<BatchProcessing> s_ProcessList;
 
         static BatchProcessor()
@@ -33,17 +33,6 @@ namespace Gamekit3D
             {
                 s_ProcessList[i]();
             }
-        }
-
-        [RuntimeInitializeOnLoadMethod]
-        static void Init()
-        {
-            if (s_Instance != null)
-                return;
-
-            GameObject obj = new GameObject("BatchProcessor");
-            DontDestroyOnLoad(obj);
-            s_Instance = obj.AddComponent<BatchProcessor>();
         }
     }
 

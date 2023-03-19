@@ -2,16 +2,14 @@ using UnityEngine;
 using Gamekit3D.Message;
 using System.Collections;
 using UnityEngine.XR.WSA;
+using Pixelplacement;
 
 namespace Gamekit3D
 {
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(Animator))]
-    public class PlayerController : MonoBehaviour, IMessageReceiver
+    public class PlayerController : Singleton<PlayerController>, IMessageReceiver
     {
-        protected static PlayerController s_Instance;
-        public static PlayerController instance { get { return s_Instance; } }
-
         public bool respawning { get { return m_Respawning; } }
 
         public float maxForwardSpeed = 8f;        // How fast Ellen can run.
@@ -145,8 +143,6 @@ namespace Gamekit3D
             m_CharCtrl = GetComponent<CharacterController>();
 
             meleeWeapon.SetOwner(gameObject);
-
-            s_Instance = this;
         }
 
         // Called automatically by Unity after Awake whenever the script is enabled. 
