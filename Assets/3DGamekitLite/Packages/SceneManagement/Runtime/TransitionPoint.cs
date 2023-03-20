@@ -52,7 +52,7 @@ namespace Gamekit3D
             {
                 m_TransitioningGameObjectPresent = true;
 
-                if (ScreenFadeManager.Instance.IsFading || GameManager.Instance.Transitioning)
+                if (GameManager.Instance.UIController.currentState.name == "Loading" || GameManager.Instance.Transitioning)
                     return;
 
                 if (transitionWhen == TransitionWhen.OnTriggerEnter)
@@ -82,7 +82,7 @@ namespace Gamekit3D
             }
             else
             {
-                GameManager.Instance.TransitionToScene(this);
+                GameManager.Instance.TransitionToScene(this, GameManager.Instance.UIController.currentState.name);
             }
         }
 

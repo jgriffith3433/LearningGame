@@ -8,6 +8,19 @@ using UnityEngine.SceneManagement;
 
 public class UIController : StateMachine
 {
+    [SerializeField] private float m_FadeDuration = 1f;
+    [SerializeField] private CanvasGroup m_FaderCanvasGroup = null;
+
+    private bool m_IsFading = false;
+
+    public bool IsFading
+    {
+        get
+        {
+            return m_IsFading;
+        }
+    }
+
     public void OnClickPlay()
     {
         GameManager.Instance.LoadLevel();
@@ -58,5 +71,32 @@ public class UIController : StateMachine
     public void OnClickQuitButton()
     {
         GameManager.Instance.Quit();
+    }
+
+    protected IEnumerator FadeCanvasGroup(float finalAlpha, CanvasGroup canvasGroup)
+    {
+        m_IsFading = true;
+        float fadeSpeed = Mathf.Abs(canvasGroup.alpha - finalAlpha) / m_FadeDuration;
+        while (!Mathf.Approximately(canvasGroup.alpha, finalAlpha))
+        {
+            canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, finalAlpha,
+                fadeSpeed * Time.deltaTime);
+            yield return null;
+        }
+        canvasGroup.alpha = finalAlpha;
+        m_IsFading = false;
+    }
+
+    public IEnumerator FadeState(string newState)
+    {
+        m_FaderCanvasGroup.alpha = 0f;
+        m_FaderCanvasGroup.gameObject.SetActive(true);
+        yield return FadeCanvasGroup(1f, m_FaderCanvasGroup);
+
+        ChangeState(newState);
+
+        m_FaderCanvasGroup.alpha = 1f;
+        yield return FadeCanvasGroup(0f, m_FaderCanvasGroup);
+        m_FaderCanvasGroup.gameObject.SetActive(false);
     }
 }

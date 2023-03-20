@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Gamekit3D
 {
-    public class BatchProcessor : Singleton<BatchProcessor>
+    public class BatchManager : Singleton<BatchManager>
     {
         public delegate void BatchProcessing();
 
         static protected List<BatchProcessing> s_ProcessList;
 
-        static BatchProcessor()
+        static BatchManager()
         {
             s_ProcessList = new List<BatchProcessing>();
         }

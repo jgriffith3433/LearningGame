@@ -79,12 +79,18 @@ namespace Gamekit3D
             }
 
             if (fade)
-                yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneOut());
+            {
+                GameManager.Instance.UIController.ChangeState("FadeOut");
+                yield return new WaitForSeconds(1f);
+            }
 
             transitioningGameObject.transform.position = destinationPosition;
 
             if (fade)
-                yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneIn());
+            {
+                GameManager.Instance.UIController.ChangeState("FadeIn");
+                yield return new WaitForSeconds(1f);
+            }
 
             if (releaseControl)
             {

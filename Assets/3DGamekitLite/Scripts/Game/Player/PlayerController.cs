@@ -574,11 +574,7 @@ namespace Gamekit3D
             }
             
             // Wait for the screen to fade out.
-            yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneOut());
-            while (ScreenFadeManager.Instance.IsFading)
-            {
-                yield return null;
-            }
+            yield return StartCoroutine(GameManager.Instance.UIController.FadeState("Respawn"));
 
             // Enable spawning.
             EllenSpawn spawn = GetComponentInChildren<EllenSpawn>();
@@ -603,7 +599,7 @@ namespace Gamekit3D
             
             // Wait for the screen to fade in.
             // Currently it is not important to yield here but should some changes occur that require waiting until a respawn has finished this will be required.
-            yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneIn());
+            yield return StartCoroutine(GameManager.Instance.UIController.FadeState("Play"));
             
             m_Damageable.ResetDamage();
         }

@@ -75,10 +75,12 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadLevel()
     {
-        m_AlwaysDisplayMouse = false;
-        HandleMouseDisplayAndLock();
-        SceneManager.LoadScene("Level_" + CurrentLevelNumber.ToString());
-        m_UIController.ChangeState("Play");
+        if (!m_Transitioning)
+        {
+            m_AlwaysDisplayMouse = false;
+            HandleMouseDisplayAndLock();
+            StartCoroutine(Transition("Level_" + CurrentLevelNumber.ToString(), SceneTransitionDestination.DestinationTag.A, "Play"));
+        }
     }
 
     public void GameOver()
@@ -102,13 +104,12 @@ public class GameManager : Singleton<GameManager>
         yield return new WaitForSeconds(sec);
         m_AlwaysDisplayMouse = true;
         HandleMouseDisplayAndLock();
-        SceneManager.LoadScene("Title");
-        m_UIController.ChangeState("Title");
+        yield return Transition("Title", SceneTransitionDestination.DestinationTag.A, "Title", TransitionPoint.TransitionType.DifferentNonGameplayScene);
     }
 
     public void RestartScene(bool resetHealth = true)
     {
-        StartCoroutine(Transition(CurrentScene.name, LevelManager.Instance.ZoneRestartDestinationTag));
+        StartCoroutine(Transition(CurrentScene.name, LevelManager.Instance.ZoneRestartDestinationTag, "Play"));
     }
 
     public void RestartSceneWithDelay(float delay, bool resetHealth = true)
@@ -122,12 +123,12 @@ public class GameManager : Singleton<GameManager>
         call(parameter);
     }
 
-    public void TransitionToScene(TransitionPoint transitionPoint)
+    public void TransitionToScene(TransitionPoint transitionPoint, string uiStateName)
     {
-        StartCoroutine(Transition(transitionPoint.newSceneName, transitionPoint.transitionDestinationTag, transitionPoint.transitionType));
+        StartCoroutine(Transition(transitionPoint.newSceneName, transitionPoint.transitionDestinationTag, uiStateName, transitionPoint.transitionType));
     }
 
-    private IEnumerator Transition(string newSceneName, SceneTransitionDestination.DestinationTag destinationTag, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
+    private IEnumerator Transition(string newSceneName, SceneTransitionDestination.DestinationTag destinationTag, string uiStateName, TransitionPoint.TransitionType transitionType = TransitionPoint.TransitionType.DifferentScene)
     {
         m_Transitioning = true;
         PersistentDataManager.SaveAllData();
@@ -135,8 +136,9 @@ public class GameManager : Singleton<GameManager>
         if (InputManager.Instance)
             InputManager.Instance.ReleaseControl();
 
-        yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneOut(ScreenFadeManager.FadeType.Loading));
+        yield return m_UIController.FadeState("Loading");
         PersistentDataManager.ClearPersisters();
+        yield return new WaitForSeconds(1f);
         yield return SceneManager.LoadSceneAsync(newSceneName);
         if (InputManager.Instance)
             InputManager.Instance.ReleaseControl();
@@ -144,13 +146,14 @@ public class GameManager : Singleton<GameManager>
         PersistentDataManager.LoadAllData();
         SceneTransitionDestination entrance = LevelManager.Instance.GetDestination(destinationTag);
         LevelManager.Instance.MoveToTransitionDestination(entrance);
-        yield return StartCoroutine(ScreenFadeManager.Instance.FadeSceneIn());
+        yield return m_UIController.FadeState(uiStateName);
         if (InputManager.Instance)
             InputManager.Instance.GainControl();
 
         m_Transitioning = false;
     }
 
+    
 
     private void Update()
     {
@@ -176,7 +179,7 @@ public class GameManager : Singleton<GameManager>
 
     protected void SwitchPauseState()
     {
-        if (Paused && Time.timeScale > 0 || !Paused && ScreenFadeManager.Instance.IsFading)
+        if (Paused && Time.timeScale > 0 || !Paused && m_UIController.IsFading)
             return;
 
         if (!m_AlwaysDisplayMouse)

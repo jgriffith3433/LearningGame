@@ -38,6 +38,12 @@ public class LevelManager : Singleton<LevelManager>
             Debug.LogWarning("Entering Transform's location has not been set.");
             return;
         }
+        if (transitionDestination.transitioningGameObject == null)
+        {
+            Debug.LogWarning("Transitioning game object has not been set");
+            transitionDestination.OnReachDestination.Invoke();
+            return;
+        }
         transitionDestination.transitioningGameObject.transform.position = transitionDestination.transform.position;
         transitionDestination.transitioningGameObject.transform.rotation = transitionDestination.transform.rotation;
         transitionDestination.OnReachDestination.Invoke();
