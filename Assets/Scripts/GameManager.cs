@@ -77,7 +77,7 @@ public class GameManager : Singleton<GameManager>
     {
         if (!m_Transitioning)
         {
-            m_AlwaysDisplayMouse = false;
+            m_AlwaysDisplayMouse = true;
             HandleMouseDisplayAndLock();
             StartCoroutine(Transition("Level_" + CurrentLevelNumber.ToString(), SceneTransitionDestination.DestinationTag.A, "Play"));
         }

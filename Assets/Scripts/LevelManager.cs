@@ -40,7 +40,6 @@ public class LevelManager : Singleton<LevelManager>
         }
         if (transitionDestination.transitioningGameObject == null)
         {
-            Debug.LogWarning("Transitioning game object has not been set");
             transitionDestination.OnReachDestination.Invoke();
             return;
         }

@@ -72,7 +72,10 @@ namespace Gamekit3D
 
         void StopShake ()
         {
-            m_OriginalLocalPosition = m_CinemachineVCam.LookAt.localPosition;
+            if (m_CinemachineVCam.LookAt != null)
+            {
+                m_OriginalLocalPosition = m_CinemachineVCam.LookAt.localPosition;
+            }
             m_IsShaking = false;
             m_ShakeAmount = 0f;
             m_RemainingShakeTime = 0f;
