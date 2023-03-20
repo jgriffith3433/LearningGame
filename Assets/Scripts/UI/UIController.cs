@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pixelplacement;
 using Gamekit3D;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 public class UIController : StateMachine
@@ -19,11 +18,6 @@ public class UIController : StateMachine
         {
             return m_IsFading;
         }
-    }
-
-    public void OnClickPlay()
-    {
-        GameManager.Instance.LoadLevel();
     }
 
     public void OnClickResume()
@@ -72,7 +66,6 @@ public class UIController : StateMachine
     {
         GameManager.Instance.Quit();
     }
-
     protected IEnumerator FadeCanvasGroup(float finalAlpha, CanvasGroup canvasGroup)
     {
         m_IsFading = true;

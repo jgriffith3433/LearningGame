@@ -19,7 +19,6 @@ public class GameManager : Singleton<GameManager>
     private bool m_Transitioning = false;
 
     public bool Paused = false;
-    public int CurrentLevelNumber = 1;
 
     public Scene CurrentScene
     {
@@ -73,13 +72,13 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void LoadLevel()
+    public void LoadLevel(string levelName)
     {
         if (!m_Transitioning)
         {
             m_AlwaysDisplayMouse = true;
             HandleMouseDisplayAndLock();
-            StartCoroutine(Transition("Level_" + CurrentLevelNumber.ToString(), SceneTransitionDestination.DestinationTag.A, "Play"));
+            StartCoroutine(Transition(levelName, SceneTransitionDestination.DestinationTag.A, "Play"));
         }
     }
 
