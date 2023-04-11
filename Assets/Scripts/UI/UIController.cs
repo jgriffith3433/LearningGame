@@ -4,12 +4,14 @@ using UnityEngine;
 using Pixelplacement;
 using Gamekit3D;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIController : StateMachine
 {
     [SerializeField] private float m_FadeDuration = 1f;
     [SerializeField] private CanvasGroup m_FaderCanvasGroup = null;
-
+    [SerializeField] private TMPro.TMP_Text m_LevelSelectionText = null;
+    [SerializeField] private Button m_PlayButton = null;
     private bool m_IsFading = false;
 
     public bool IsFading
@@ -25,6 +27,18 @@ public class UIController : StateMachine
         GameManager.Instance.Resume();
     }
 
+    public void ChangeLevelSelectionText(string text)
+    {
+        m_LevelSelectionText.text = text;
+        if (text == "Select Level")
+        { //hide play button
+            m_PlayButton.gameObject.SetActive(false);
+
+        }
+        else {//show play button
+            m_PlayButton.gameObject.SetActive(true);
+        }
+    }
     public void OnClickOptionsButton()
     {
         ChangeState("Options");
@@ -62,10 +76,16 @@ public class UIController : StateMachine
         }
     }
 
+    public void OnClickPlay()
+    {
+        GameManager.Instance.LoadLevel(m_LevelSelectionText.text);
+    }
+
     public void OnClickQuitButton()
     {
         GameManager.Instance.Quit();
     }
+
     protected IEnumerator FadeCanvasGroup(float finalAlpha, CanvasGroup canvasGroup)
     {
         m_IsFading = true;
