@@ -88,6 +88,11 @@ public class GameManager : Singleton<GameManager>
         StartCoroutine(GoToTitleScreen(m_SecondsToWaitGameOver));
     }
 
+    public void GoHome()
+    {
+        StartCoroutine(GoToTitleScreen(0));
+    }
+
     public void Resume()
     {
         SwitchPauseState();
