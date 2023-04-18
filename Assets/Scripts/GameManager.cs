@@ -93,6 +93,20 @@ public class GameManager : Singleton<GameManager>
         StartCoroutine(GoToTitleScreen(0));
     }
 
+    public void OnCorrect()
+    {
+        GameManager.Instance.DialogueController.ShowDialogueText("Correct");
+        //GameManager.Instance.DialogueController.HideDialogueWithDelay(1);
+        StartCoroutine(GoToTitleScreen(3));
+    }
+
+    public void OnIncorrect()
+    {
+        GameManager.Instance.DialogueController.ShowDialogueText("Incorrect");
+        //GameManager.Instance.DialogueController.HideDialogueWithDelay(1);
+        StartCoroutine(GoToTitleScreen(3));
+    }
+
     public void Resume()
     {
         SwitchPauseState();

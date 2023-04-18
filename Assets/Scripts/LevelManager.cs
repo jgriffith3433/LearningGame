@@ -59,4 +59,19 @@ public class LevelManager : Singleton<LevelManager>
         Debug.LogWarning("No entrance was found with the " + destinationTag + " tag.");
         return null;
     }
+
+    public void OnClickEnter()
+    {
+        if (AnswerSelectionManager.Instance.SelectedAnswer != null)
+        {
+            if (AnswerSelectionManager.Instance.SelectedAnswer.gameObject.name == "Correct")
+            {
+                GameManager.Instance.OnCorrect();
+            }
+            else
+            {
+                GameManager.Instance.OnIncorrect();
+            }
+        }
+    }
 }
