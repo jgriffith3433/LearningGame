@@ -95,14 +95,14 @@ public class GameManager : Singleton<GameManager>
 
     public void OnCorrect()
     {
-        GameManager.Instance.DialogueController.ShowDialogueText("Correct");
+        m_DialogueController.ShowDialogueText("Correct");
         //GameManager.Instance.DialogueController.HideDialogueWithDelay(1);
         StartCoroutine(GoToTitleScreen(3));
     }
 
     public void OnIncorrect()
     {
-        GameManager.Instance.DialogueController.ShowDialogueText("Incorrect");
+        m_DialogueController.ShowDialogueText("Incorrect");
         //GameManager.Instance.DialogueController.HideDialogueWithDelay(1);
         StartCoroutine(GoToTitleScreen(3));
     }
